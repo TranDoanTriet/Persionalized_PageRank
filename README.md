@@ -1,17 +1,32 @@
-Hướng dẫn cài đặt Hadoop trên Windows Subsystem for Linux (WSL)
-1. Cài đặt JDK 8
+# Hướng dẫn cài đặt Hadoop trên Windows Subsystem for Linux (WSL)
+
+## 1. Cài đặt JDK 8
+
+```bash
 sudo apt update
 sudo apt install openjdk-8-jdk
-•	Kiểm tra đường dẫn JAVA_HOME:
-•	readlink -f $(which java)
-# Thường là /usr/lib/jvm/java-8-openjdk-amd64/bin/java
-•	Khuyến nghị: Dùng JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 cho Ubuntu trên WSL.
-2. Tải và giải nén Hadoop
+```
+
+- **Kiểm tra đường dẫn JAVA_HOME:**
+  ```bash
+  readlink -f $(which java)
+  # Thường là /usr/lib/jvm/java-8-openjdk-amd64/bin/java
+  ```
+- **Khuyến nghị:** Dùng JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 cho Ubuntu trên WSL.
+
+## 2. Tải và giải nén Hadoop
+
+```bash
 wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
 tar -xzf hadoop-3.3.6.tar.gz
 mv hadoop-3.3.6 hadoop
-3. Thiết lập biến môi trường
-Thêm vào cuối file ~/.bashrc:
+```
+
+## 3. Thiết lập biến môi trường
+
+Thêm vào cuối file `~/.bashrc`:
+
+```bash
 export USER_HOME="/user/$(whoami)"
 
 # ============================================
@@ -28,24 +43,45 @@ export YARN_HOME=$HADOOP_HOME
 # Thêm Hadoop vào PATH để có thể gõ lệnh 'hadoop' ở bất kỳ đâu
 export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 # ============================================
+```
+
 Sau đó:
+
+```bash
 source ~/.bashrc
-4. Kiểm tra biến môi trường
+```
+
+## 4. Kiểm tra biến môi trường
+
+```bash
 echo $JAVA_HOME
 echo $HADOOP_HOME
 hadoop version
-5. Thiết lập SSH không mật khẩu
+```
+
+## 5. Thiết lập SSH không mật khẩu
+
+```bash
 sudo apt install openssh-server
 sudo service ssh start
 ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ssh localhost   # Đảm bảo không hỏi mật khẩu
-•	Kiểm tra trạng thái SSH:
-sudo service ssh status
-6. Cấu hình Hadoop ở chế độ Pseudodistributed
-core-site.xml
-Mở file $HADOOP_HOME/etc/hadoop/core-site.xml và chỉnh như sau:
+```
+
+- **Kiểm tra trạng thái SSH:**
+  ```bash
+  sudo service ssh status
+  ```
+
+## 6. Cấu hình Hadoop ở chế độ Pseudodistributed
+
+### core-site.xml
+
+Mở file `$HADOOP_HOME/etc/hadoop/core-site.xml` và chỉnh như sau:
+
+```xml
 <configuration>
   <property>
     <name>fs.defaultFS</name>
@@ -56,8 +92,13 @@ Mở file $HADOOP_HOME/etc/hadoop/core-site.xml và chỉnh như sau:
     <value>/home/${user.name}/hadoop_tmp</value>
   </property>
 </configuration>
-hdfs-site.xml
-Mở file $HADOOP_HOME/etc/hadoop/hdfs-site.xml và chỉnh như sau:
+```
+
+### hdfs-site.xml
+
+Mở file `$HADOOP_HOME/etc/hadoop/hdfs-site.xml` và chỉnh như sau:
+
+```xml
 <configuration>
   <property>
     <name>dfs.replication</name>
@@ -72,8 +113,13 @@ Mở file $HADOOP_HOME/etc/hadoop/hdfs-site.xml và chỉnh như sau:
     <value>file:///home/${user.name}/hadoop_tmp/dfs/data</value>
   </property>
 </configuration>
-mapred-site.xml
-Mở file $HADOOP_HOME/etc/hadoop/mapred-site.xml và chỉnh như sau:
+```
+
+### mapred-site.xml
+
+Mở file `$HADOOP_HOME/etc/hadoop/mapred-site.xml` và chỉnh như sau:
+
+```xml
 <configuration>
   <property>
     <name>mapreduce.framework.name</name>
@@ -112,8 +158,13 @@ Mở file $HADOOP_HOME/etc/hadoop/mapred-site.xml và chỉnh như sau:
     <value>1</value>
   </property>
 </configuration>
-yarn-site.xml
-Mở file $HADOOP_HOME/etc/hadoop/yarn-site.xml và chỉnh như sau:
+```
+
+### yarn-site.xml
+
+Mở file `$HADOOP_HOME/etc/hadoop/yarn-site.xml` và chỉnh như sau:
+
+```xml
 <configuration>
   <property>
     <name>yarn.resourcemanager.hostname</name>
@@ -140,8 +191,13 @@ Mở file $HADOOP_HOME/etc/hadoop/yarn-site.xml và chỉnh như sau:
     <value>mapreduce_shuffle</value>
   </property>
 </configuration>
-hadoop-env.sh
-Mở file $HADOOP_HOME/etc/hadoop/hadoop-env.sh và thêm hoặc sửa:
+```
+
+### hadoop-env.sh
+
+Mở file `$HADOOP_HOME/etc/hadoop/hadoop-env.sh` và thêm hoặc sửa:
+
+```bash
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 
@@ -150,37 +206,64 @@ export HADOOP_DATANODE_OPTS="-Xms512m -Xmx1024m $HADOOP_DATANODE_OPTS"
 export HADOOP_SECONDARYNAMENODE_OPTS="-Xms512m -Xmx1024m $HADOOP_SECONDARYNAMENODE_OPTS"
 export YARN_RESOURCEMANAGER_OPTS="-Xms512m -Xmx1024m $YARN_RESOURCEMANAGER_OPTS"
 export YARN_NODEMANAGER_OPTS="-Xms512m -Xmx1024m $YARN_NODEMANAGER_OPTS"
-7. Khởi tạo HDFS
+```
+
+## 7. Khởi tạo HDFS
+
+```bash
 mkdir -p ~/hadoop_tmp/dfs/name
 mkdir -p ~/hadoop_tmp/dfs/data
 hdfs namenode -format
-8. Khởi động và dừng Hadoop
-•	Khởi động:
-•	start-dfs.sh
-start-yarn.sh
-•	Dừng:
-•	stop-yarn.sh
-stop-dfs.sh
-•	Kiểm tra trạng thái các dịch vụ:
-•	jps
-# Kỳ vọng thấy: NameNode, DataNode, ResourceManager, NodeManager, SecondaryNameNode
-9. Upload file lên HDFS
-•	Tạo file input.txt mẫu:
-echo -e "hello world\nhello hadoop\nhello wsl" > ~/input.txt
-•	Upload lên HDFS:
-•	hdfs dfs -mkdir -p /user/$(whoami)/input
-•	hdfs dfs -put ~/input.txt /user/$(whoami)/input/
-hdfs dfs -ls /user/$(whoami)/input/
-10. Chạy thử WordCount
-•	Chạy ví dụ WordCount:
-hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar wordcount /user/$(whoami)/input /user/$(whoami)/output
-•	Xem kết quả:
-hdfs dfs -cat /user/$(whoami)/output/part-*
-11. Lưu ý khi dùng WSL
-•	Quyền truy cập file/folder:
-o	Nên thao tác file trong thư mục home của WSL (/home/yourname), tránh dùng trực tiếp file từ /mnt/c/... để tránh lỗi quyền.
-•	JAVA_HOME:
-o	Nếu bạn cài JDK ở vị trí khác, hãy sửa lại biến JAVA_HOME và trong hadoop-env.sh cho đúng.
-•	Nếu gặp lỗi:
-o	Kiểm tra lại quyền file, trạng thái SSH, trạng thái các tiến trình Hadoop bằng jps.
-•	Dùng Ubuntu 20.04 hoặc 22.04 trên WSL để đảm bảo tương thích tốt nhất.
+```
+
+## 8. Khởi động và dừng Hadoop
+
+- **Khởi động:**
+  ```bash
+  start-dfs.sh
+  start-yarn.sh
+  ```
+- **Dừng:**
+  ```bash
+  stop-yarn.sh
+  stop-dfs.sh
+  ```
+- **Kiểm tra trạng thái các dịch vụ:**
+  ```bash
+  jps
+  # Kỳ vọng thấy: NameNode, DataNode, ResourceManager, NodeManager, SecondaryNameNode
+  ```
+
+## 9. Upload file lên HDFS
+
+- **Tạo file input.txt mẫu:**
+  ```bash
+  echo -e "hello world\nhello hadoop\nhello wsl" > ~/input.txt
+  ```
+- **Upload lên HDFS:**
+  ```bash
+  hdfs dfs -mkdir -p /user/$(whoami)/input
+  hdfs dfs -put ~/input.txt /user/$(whoami)/input/
+  hdfs dfs -ls /user/$(whoami)/input/
+  ```
+
+## 10. Chạy thử WordCount
+
+- **Chạy ví dụ WordCount:**
+  ```bash
+  hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar wordcount /user/$(whoami)/input /user/$(whoami)/output
+  ```
+- **Xem kết quả:**
+  ```bash
+  hdfs dfs -cat /user/$(whoami)/output/part-*
+  ```
+
+## 11. Lưu ý khi dùng WSL
+
+- **Quyền truy cập file/folder:**
+  - Nên thao tác file trong thư mục home của WSL (`/home/yourname`), tránh dùng trực tiếp file từ `/mnt/c/...` để tránh lỗi quyền.
+- **JAVA_HOME:**
+  - Nếu bạn cài JDK ở vị trí khác, hãy sửa lại biến JAVA_HOME và trong `hadoop-env.sh` cho đúng.
+- **Nếu gặp lỗi:**
+  - Kiểm tra lại quyền file, trạng thái SSH, trạng thái các tiến trình Hadoop bằng `jps`.
+- **Dùng Ubuntu 20.04 hoặc 22.04 trên WSL để đảm bảo tương thích tốt nhất.** 
