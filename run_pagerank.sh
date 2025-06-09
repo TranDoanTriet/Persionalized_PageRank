@@ -45,7 +45,7 @@ for ((i=1; i<=MAX_ITER; i++)); do
   rm -f $PREV_SORTED $CURR_SORTED
 
   if awk "BEGIN{exit !($DELTA < $EPSILON)}"; then
-    echo "✅ Converged at iteration $i"
+    echo "Converged at iteration $i"
     LAST_ITER=$i
     break
   fi
