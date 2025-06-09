@@ -1,7 +1,7 @@
 <<<<<<< HEAD
 # Hướng dẫn cài đặt Hadoop trên Windows Subsystem for Linux (WSL)
 
-## 1. Cài đặt JDK 8
+## 1. Cài đặt JDK 11
 
 ```bash
 sudo apt update
@@ -11,9 +11,9 @@ sudo apt install openjdk-8-jdk
 - **Kiểm tra đường dẫn JAVA_HOME:**
   ```bash
   readlink -f $(which java)
-  # Thường là /usr/lib/jvm/java-8-openjdk-amd64/bin/java
+  # Thường là /usr/lib/jvm/java-11-openjdk-amd64/bin/java
   ```
-- **Khuyến nghị:** Dùng JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 cho Ubuntu trên WSL.
+- **Khuyến nghị:** Dùng JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 cho Ubuntu trên WSL.
 
 ## 2. Tải và giải nén Hadoop
 
@@ -32,7 +32,7 @@ export USER_HOME="/user/$(whoami)"
 
 # ============================================
 # Hadoop & Java environment variables
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 export HADOOP_HOME=$HOME/hadoop
 export HADOOP_INSTALL=$HADOOP_HOME
@@ -199,7 +199,7 @@ Mở file `$HADOOP_HOME/etc/hadoop/yarn-site.xml` và chỉnh như sau:
 Mở file `$HADOOP_HOME/etc/hadoop/hadoop-env.sh` và thêm hoặc sửa:
 
 ```bash
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 
 export HADOOP_NAMENODE_OPTS="-Xms512m -Xmx1024m $HADOOP_NAMENODE_OPTS"
