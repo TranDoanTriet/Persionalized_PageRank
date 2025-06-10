@@ -271,6 +271,19 @@ hdfs namenode -format
 
 # khởi chạy:
 truy cập vào thư mục nơi chứa các file, thực hiện câu lệnh ./run_pagerank.sh
-=======
-
+# khởi động HDFS là: 
+start-dfs.sh
+# Khởi động YARN để chạy ResourceManager và NodeManager:
+start-yarn.sh
+# Kiểm tra các tiến trình đang chạy:
+jps
+# exspectation:
+NameNode
+Jps
+SecondaryNameNode
+NodeManager
+DataNode
+ResourceManager
+# chuyển space về tab:
+sed 's/ \+/\t/g' graph.txt > iter0.txt
 >>>>>>> db60f424b0d9cbaab9bfbfdf07c2433a316c38fa
