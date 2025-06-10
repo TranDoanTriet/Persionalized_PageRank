@@ -257,9 +257,6 @@ hdfs namenode -format
 - **Nếu gặp lỗi:**
   - Kiểm tra lại quyền file, trạng thái SSH, trạng thái các tiến trình Hadoop bằng `jps`.
 - **Dùng Ubuntu 20.04 hoặc 22.04 trên WSL để đảm bảo tương thích tốt nhất.**
-
-# khởi chạy:
-truy cập vào thư mục nơi chứa các file, thực hiện câu lệnh ./run_pagerank.sh
 # khởi động HDFS là: 
 start-dfs.sh
 # Khởi động YARN để chạy ResourceManager và NodeManager:
@@ -275,4 +272,6 @@ DataNode
 ResourceManager
 # chuyển space về tab:
 sed 's/ \+/\t/g' graph.txt > iter0.txt
+# khởi chạy:
+truy cập vào thư mục nơi chứa các file, thực hiện câu lệnh ./run_pagerank.sh
 >>>>>>> db60f424b0d9cbaab9bfbfdf07c2433a316c38fa
