@@ -1,37 +1,31 @@
 <<<<<<< HEAD
-# Hướng dẫn cài đặt Hadoop trên Windows Subsystem for Linux (WSL)
-
+# Hướng dẫn triển khai persionalized pagerank trên hadoop - môi trường window
+## Bước đầu phải cài được linux:
+Sử dụng WSL - Windows Subsystem for Linux. Mở PowerShell với quyền Administrator. Chạy lênh:
+```bash
+wsl --install
+```
 ## 1. Cài đặt JDK 11
-
 ```bash
 sudo apt update
 sudo apt install openjdk-11-jdk
 ```
-
-- **Kiểm tra đường dẫn JAVA_HOME:**
-  ```bash
-  readlink -f $(which java)
-  # Thường là /usr/lib/jvm/java-11-openjdk-amd64/bin/java
-  ```
-- **Khuyến nghị:** Dùng JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 cho Ubuntu trên WSL.
-
 ## 2. Tải và giải nén Hadoop
 
 ```bash
+cd ~
 wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
 tar -xzf hadoop-3.3.6.tar.gz
 mv hadoop-3.3.6 hadoop
 ```
-
 ## 3. Thiết lập biến môi trường
-
+Mở file .bashrc:
+```bash
+nano ~/.bashrc
+```
 Thêm vào cuối file `~/.bashrc`:
-
 ```bash
 export USER_HOME="/user/$(whoami)"
-
-# ============================================
-# Hadoop & Java environment variables
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 export HADOOP_HOME=$HOME/hadoop
@@ -40,14 +34,9 @@ export HADOOP_COMMON_HOME=$HADOOP_HOME
 export HADOOP_HDFS_HOME=$HADOOP_HOME
 export HADOOP_MAPRED_HOME=$HADOOP_HOME
 export YARN_HOME=$HADOOP_HOME
-
-# Thêm Hadoop vào PATH để có thể gõ lệnh 'hadoop' ở bất kỳ đâu
 export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
-# ============================================
 ```
-
-Sau đó:
-
+Chạy file bashrc:
 ```bash
 source ~/.bashrc
 ```
@@ -60,7 +49,7 @@ echo $HADOOP_HOME
 hadoop version
 ```
 
-## 5. Thiết lập SSH không mật khẩu
+## 5. Thiết lập SSH không mật khẩu (tùy chọn)
 
 ```bash
 sudo apt install openssh-server
